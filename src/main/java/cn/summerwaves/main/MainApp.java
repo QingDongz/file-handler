@@ -22,14 +22,14 @@ public class MainApp {
         fileMapper = (FileMapper) context.getBean("fileMapper");
 
         //使用最新的JAVA1.7 NIO 操作文件
-        Path listDir = Paths.get("D:\\file");              //define the starting file
-        ListTree walk = new ListTree();                          //instantiate the walk
+        Path listDir = Paths.get("D:\\file");
+        ListTree walk = new ListTree();
         walk.setFileMapper(fileMapper);
-        EnumSet opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS); //follow links
+        EnumSet opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
 
         try {
             //遍历文件
-            Files.walkFileTree(listDir, opts, Integer.MAX_VALUE, walk); //start the walk
+            Files.walkFileTree(listDir, opts, Integer.MAX_VALUE, walk);
 
         } catch (IOException e) {
             System.err.println(e);
@@ -42,11 +42,11 @@ public class MainApp {
 
 class ListTree extends SimpleFileVisitor<Path> {
 
-    //此文件夹是第一次遍历
+    /**此文件夹是第一次遍历*/
     private static int IS_FIRST_INSERT = 1;
-    //此文件夹为重复数据，数据库中已存有其路径
+    /**此文件夹为重复数据，数据库中已存有其路径*/
     private static int IS_REPEAT_FILE = 2;
-    //此文件夹的数据在数据库中存过，但是文件夹之后被更新过
+    /**此文件夹的数据在数据库中存过，但是文件夹之后被更新过*/
     private static int IS_FILE_UPDATE = 3;
 
     private FileMapper fileMapper;
@@ -119,11 +119,12 @@ class ListTree extends SimpleFileVisitor<Path> {
             }
 
             //将数据存入数据库
+            DirectoryStream<Path> entries2 = Files.newDirectoryStream(dir);
             int count = 0;
-            for (Path path : entries) {
+            for (Path path : entries2) {
                 File file = new File();
-                file.setDir(path.getParent().getFileName().toString());
-                file.setFile_name(path.getFileName().toString());
+                file.setDir(new String(path.getParent().getFileName().toString().getBytes("utf-8"),"utf-8"));
+                file.setFile_name(new String(path.getFileName().toString().getBytes("utf-8"),"utf-8"));
                 files.add(file);
                 count++;
                 //批量提交，调高效率

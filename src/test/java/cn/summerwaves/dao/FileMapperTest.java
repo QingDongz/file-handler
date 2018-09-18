@@ -24,8 +24,8 @@ public class FileMapperTest {
     @org.junit.Test
     public void insertSelective() {
         File file = new File();
-        file.setDir("testDir");
-        file.setFile_name("testFileName");
+        file.setDir("test");
+        file.setFile_name("测试");
         int success = fileMapper.insertSelective(file);
         System.out.println(success);
     }
@@ -45,7 +45,10 @@ public class FileMapperTest {
 
     @Test
     public void countByDirSubFileNumber() {
-        System.out.println(fileMapper.countByDirSubFileNumber("gdb_pic"));
+        System.out.println(fileMapper.countByDirSubFileNumber("boc_pic - 副本 - 副本"));
+        FileExample fileExample = new FileExample();
+        fileExample.createCriteria().andDirEqualTo("boc_pic - 副本 - 副本");
+        System.out.println(fileMapper.countByExample(fileExample));
     }
 
     @Test
